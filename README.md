@@ -7,20 +7,14 @@ https://au.mathworks.com/matlabcentral/fileexchange/10676-circular-statistics-to
 P. Berens, CircStat: A Matlab Toolbox for Circular Statistics, Journal of Statistical Software, Volume 31, Issue 10, 2009 
 http://www.jstatsoft.org/v31/i10
 
-* ST_cycles
-Main code
+* **ST_cycles.m**: Main code
 
-* parse2matlab
-Convert excel data to matlab
+* **parse2matlab.m**: Convert excel data to matlab
 
-* ST_by_syndrome
-analyse the epilepsy types
+* **ST_by_syndrome.m**: analyse the epilepsy types
 
-* ST_by_type
-analyse the seizure types
+* **ST_by_type.m**: analyse the seizure types
 
-* ST_simulation
-perform simulations for statistical significance
+* **ST_simulation.m**: perform simulations for statistical significance
 
-* watson
-Compute watson's U2 test for circular data
+* **watson.m**: Compute watson's U2 test for circular data

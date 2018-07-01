@@ -4,8 +4,12 @@ Code for analysis of SeizureTracker data
 All analsyis was undertaken in MATLAB R2017a (Mathworks). Note that all code requires access to the Circular Statistics Toolbox that can be downloaded online:
 https://au.mathworks.com/matlabcentral/fileexchange/10676-circular-statistics-toolbox--directional-statistics-
 
+## Rerefences
+
 P. Berens, CircStat: A Matlab Toolbox for Circular Statistics, Journal of Statistical Software, Volume 31, Issue 10, 2009 
 http://www.jstatsoft.org/v31/i10
+
+## File List
 
 * **ST_cycles.m**: Main code
 

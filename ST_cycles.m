@@ -62,7 +62,7 @@ for ind = 1:Npt
     SzTimes = SzTimes(valid);
     szTime = szTime(valid);
     
-    if length(SzTimes) < 50
+    if length(SzTimes) < 100
         continue;
     end
     
@@ -73,7 +73,7 @@ for ind = 1:Npt
     totalSz = totalSz + length(Hour);
     
     % check max res
-    maxRes = max(SzTimes) / 20;
+    maxRes = max(SzTimes) / 10;
     resWinCur = resWin;
     resWinCur(resWin > maxRes) = [];
     
@@ -95,23 +95,10 @@ for ind = 1:Npt
         
         ISI = [leadTime ; diff(SzTimes)];
         SzTimesTemp = SzTimes(ISI > leadTime);
-        ClusterSz = SzTimes(ISI < leadTime);
-        
-%         a = ISI < leadTime;
-%         out     = zeros(size(a));
-%         aa      = [0,a,0];
-%         ii      = strfind(aa, [0 1]);
-%         out(ii) = strfind(aa, [1 0]) - ii;
-%         
-        if length(SzTimesTemp) < 10
+          
+        if length(SzTimesTemp) < 100
             continue;
         end
-        
-%         if length(ClusterSz) < 50
-%             continue;
-%         end
-        
-        propCluster(ind) = (length(SzTimes) - length(SzTimesTemp)) / length(SzTimes);
         
         % actual variance
         SzPhase = 2 * pi * mod(SzTimes, n) / n;
@@ -144,64 +131,13 @@ for ind = 1:Npt
     end
     
 end
-% nanmean(avDur)
-
-%% periods
-xvals = [24, 7*24, 14*24, 4*7*24, 3*4*7*24 6*4*7*24 21*4*7*24];
-xlab = {'day', 'week', 'fortnight', 'month', '3 month', '6 month', 'year'};
-
-[~,Imax] = max(circR,[],2);
-periodSize = resWin(Imax);
-
-count = histcounts(periodSize,resWin);
-[count2, I] = sort(count, 'descend');
-% 
-% plot(nanmean(circR(:,1:53)),'k', 'linewidth', 2);  % first 6 months
-% set(gca,'box', 'off', 'xtick', [2, 4, 10, 17,  31, 53], 'xticklabels', {'12 hours', 'day', 'week', 'fortnight', 'month', '6 months'});
-% ylabel('average resultant vector');
-% xlabel('period size');
-
-% line([xvals ; xvals], [zeros(size(xvals)) ; 700*ones(size(xvals))], 'color', 'r');
 
 %% plots
 font = 'arial';
 fsize = 8;
 
-col5 = [205 0 102]/255;
-col1 = [0 153 153]/255;
-
-lw = 1.5;
-
 count = 1;
 x = resWin;
-% figure;
-% for iPt = 1:Npt
-%     hold off;
-%
-%     % set plot
-%     plot(x, circVar(iPt,:), 'k.-')
-%     hold on;
-%
-%     % markers
-%     line([xvals ; xvals], [zeros(size(xvals)) ; ones(size(xvals))], 'color', 'r');
-%
-%     [~,I] = max(circVar(iPt,:));
-%     maxPeriod = x(I);
-%
-%     maxRes = find(isnan(circVar(iPt,:)) == 1, 1, 'first');
-%
-%     % axis
-%     set(gca, 'box', 'off','xlim',[0 resWin(maxRes)], 'ylim',[0 1], ...
-%         'xtick',xvals,'xticklabels',xlab,'yticklabels', [], 'fontname', font, 'fontsize', fsize);
-%     xlabel('Time Window', 'fontname', font, 'fontsize', fsize);
-%     ylabel('mean vector length', 'fontname', font, 'fontsize', fsize);
-%     title(sprintf('max periodicity at: %d days', floor(maxPeriod / 24)));
-%
-%     drawnow
-%     pause(0.1)
-% end
-
-%
 close all
 figure;
 
@@ -218,17 +154,6 @@ id(invalid) = [];
 
 [~,ind] = sort(circR(:,10),'descend');
 
-%%
-% alpha = 0.05/80;
-% pVals = circRtest;
-% pVals(circRtest > 0.05 / 80) = 1;
-% pVals(isnan(pVals)) = 1;
-% imagesc(1/alpha * pVals);
-% % imagesc(circR > 0.2);
-% colormap('hot');
-% caxis([0 alpha]);
-
-%%
 imagesc(circR(:,:));
 C = brewermap(255,'PuBu');
 colormap(C);
@@ -247,8 +172,6 @@ set(gca,'box','off','tickdir','out', ...
     'fontsize',fsize,'fontname','arial');
 ylabel('Patients','fontsize',fsize);
 xlabel('Time Scale','fontsize',fsize);
-
-% set(gca,'xcolor','w','ycolor','w','fontsize',fsize);
 
 hold on;
 yyaxis right
@@ -278,24 +201,6 @@ a1 = sum(sum(circRtest2 < alpha,2) > 1);
 c = sum(sum(circRtest2(:,24:end) < alpha,2) > 0);
 b = sum(sum(circRtest2(:,10) < alpha,2) > 0);
 a = sum(sum(circRtest2(:,4) < alpha,2) > 0);
-
-% save inds
-[ind1,~] = find(circRtest(:,24:end) < alpha);
-long = id(unique(ind1));
-weekly = id(circRtest(:,10) < alpha);
-daily = id(circRtest(:,4) < alpha);
-
-save('CycleIDs','long','weekly','daily');
-studyId = id;
-save('StudyIDs','studyId');
-
-% 
-% a0 = sum(sum(circR > 0.2,2) > 0);
-% a1 = sum(sum(circR > 0.2,2) > 1);
-% c = sum(sum(circR(:,24:end) > 0.2,2) > 0);
-% % one week
-% b = sum(sum(circR(:,10) > 0.2,2) > 0);
-% a = sum(sum(circR(:,4) > 0.2,2) > 0);
 
 % over 3 weeks
 c2 = sum(sum(circRtest(:,24:39) < 0.0033,2) > 0);
@@ -345,9 +250,7 @@ line([1.85 1.85], [mWeek+ciMWeek mWeek-ciMWeek],'color','k','linewidth',1.5);
 line([2.15 2.15], [fWeek+ciFWeek fWeek-ciFWeek],'color','k','linewidth',1.5);
 line([2.85 2.85], [mMonth+ciMMonth mMonth-ciMMonth],'color','k','linewidth',1.5);
 line([3.15 3.15], [fMonth+ciFMonth fMonth-ciFMonth],'color','k','linewidth',1.5);
-C = brewermap(9,'Dark2');
-% B(1).FaceColor = C(1,:);
-% B(2).FaceColor = C(2,:);
+
 B(1).FaceColor = [0 0 0];
 B(2).FaceColor = [0.5 0.5 0.5];
 set(gca,'box','off',...

@@ -94,14 +94,15 @@ for ind = 1:Npt
         end
         
         ISI = [leadTime ; diff(SzTimes)];
-        SzTimesTemp = SzTimes(ISI > leadTime);
+        SzTimeLead = SzTimes(ISI > leadTime);
           
-        if length(SzTimesTemp) < 100
-            continue;
-        end
+%         if length(SzTimeLead) < 100
+%             continue;
+%         end
         
         % actual variance
-        SzPhase = 2 * pi * mod(SzTimes, n) / n;
+%         SzPhase = 2 * pi * mod(SzTimes, n) / n;  % to include clusters
+        SzPhase = 2 * pi * mod(SzTimeLead, n) / n;
         circR(ind, count) = circ_r(SzPhase);
         circRtest(ind, count) = circ_rtest(SzPhase);
         circRtest2(ind, count) = circ_otest(SzPhase);

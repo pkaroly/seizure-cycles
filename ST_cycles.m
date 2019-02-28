@@ -95,10 +95,6 @@ for ind = 1:Npt
         
         ISI = [leadTime ; diff(SzTimes)];
         SzTimeLead = SzTimes(ISI > leadTime);
-          
-%         if length(SzTimeLead) < 100
-%             continue;
-%         end
         
         % actual variance
 %         SzPhase = 2 * pi * mod(SzTimes, n) / n;  % to include clusters
@@ -196,6 +192,7 @@ print(gcf,'ST_RVals','-dpng','-r300');
 
 %%
 % vals
+simThresh = 0.2644; % from simulation
 alpha = 0.05 / 80;
 a0 = sum(sum(circRtest2 < alpha,2) > 0);
 a1 = sum(sum(circRtest2 < alpha,2) > 1);
@@ -216,25 +213,25 @@ fprintf('any: %.0f, any+1: %.0f, day: %.0f, week: %.0f, long: %.0f\n',100*[a0,a1
 %%
 nM = sum(gender == 1);
 nF = sum(gender == 0);
-pM = sum(gender(circR(:,4) > 0.2) == 1) / nM;
-pW = sum(gender(circR(:,4) > 0.2) == 0) / nF;
+pM = sum(gender(circR(:,4) > simThresh) == 1) / nM;
+pW = sum(gender(circR(:,4) > simThresh) == 0) / nF;
 
 p = a / sum(~invalid);
 r = (pM - pW) /  sqrt((p / nM) + (p / nF));
 
 NactualPt = Npt - sum(isnan(avDur));
 N = sum(~isnan(gender));
-mDay = sum(gender(circR(:,4) > 0.2) == 1) / a;
+mDay = sum(gender(circR(:,4) > simThresh) == 1) / a;
 ciMDay = CI(mDay,a);
-fDay = sum(gender(circR(:,4) > 0.2) == 0) / a;
+fDay = sum(gender(circR(:,4) > simThresh) == 0) / a;
 ciFDay = CI(fDay,a);
 % disp(mDay - fDay)
-mWeek = sum(gender(circR(:,10) > 0.2) == 1) / b;
+mWeek = sum(gender(circR(:,10) > simThresh) == 1) / b;
 ciMWeek = CI(mWeek,b);
-fWeek = sum(gender(circR(:,10) > 0.2) == 0) / b;
+fWeek = sum(gender(circR(:,10) > simThresh) == 0) / b;
 ciFWeek = CI(fWeek, b);
 % disp(mWeek - fWeek)
-[ind, ~] = find(circR(:,24:end) > 0.2);
+[ind, ~] = find(circR(:,24:end) > simThresh);
 mMonth = sum(gender(unique(ind)) == 1) / c;
 ciMMonth = CI(mMonth,c);
 fMonth = sum(gender(unique(ind)) == 0) / c;
